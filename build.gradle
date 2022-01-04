@@ -1,3 +1,16 @@
+buildscript {
+	ext {
+//		queryDslVersion = "4.4.0"
+//		handlebars = "0.3.3"
+//		handlebarsHelper = "4.2.0"
+//		swagger = "3.0.0"
+//		commonLang = "3.12.0"
+//		commonsFileupload = "1.4"
+		log4jdbc = "1.16"
+		logback = "4.11"
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -20,8 +33,15 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Logging
+	implementation "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:${log4jdbc}"
+
+	// jwt token
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
