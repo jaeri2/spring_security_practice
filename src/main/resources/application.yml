@@ -25,5 +25,6 @@ spring:
 
 
 jwt:
+  # echo 'this-is-security-practice-secret-key-made-by-jae-hee-this-key-need-more-long-version-more-more-long'|base64
   secret: dGhpcy1pcy1zZWN1cml0eS1wcmFjdGljZS1zZWNyZXQta2V5LW1hZGUtYnktamFlLWhlZS10aGlzLWtleS1uZWVkLW1vcmUtbG9uZy12ZXJzaW9uLW1vcmUtbW9yZS1sb25nCg==
   token-validity-in-seconds: 86400
