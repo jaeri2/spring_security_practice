@@ -1,9 +1,11 @@
 package com.example.securitypracitce.domain.entity;
 
+import com.sun.tools.jconsole.JConsoleContext;
 import lombok.*;
 
 import javax.persistence.*;
 
+@ToString(exclude = {"user"})
 @Getter
 @Builder
 @AllArgsConstructor
@@ -26,4 +28,8 @@ public class Board extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
+    public void changeBoard(String title, String contents) {
+        this.title = title;
+        this.contents = contents;
+    }
 }

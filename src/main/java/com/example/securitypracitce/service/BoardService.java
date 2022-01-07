@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
 
@@ -21,16 +22,22 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
+
     public boolean existsById(Long id) {
         return boardRepository.existsById(id);
     }
 
-    // 글 작성
-    public void createBoard(BoardReq boardReq) {
+    public String findLoginUserEmail() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails) principal;
         String email = userDetails.getUsername();
 
+        return email;
+    }
+
+    // 글 작성
+    public void createBoard(BoardReq boardReq) {
+        String email = findLoginUserEmail();
         User findUser = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("등록되지 않은 사용자 정보입니다."));
 
         Board newBoard = Board.builder()
@@ -54,5 +61,27 @@ public class BoardService {
                 .writer(findBoard.getWriter())
                 .writeDate(findBoard.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
+    }
+
+    // 글 수정
+    @Transactional
+    public BoardRes updateBoards(Long id, BoardReq boardReq) {
+        Board findBoard = boardRepository.findById(id).get();
+
+        String email = findLoginUserEmail();
+        if (!findBoard.getUser().getEmail().equals(email)) {
+            throw new IllegalArgumentException("해당 글을 수정할 수 있는 권한이 없습니다.");
+        }
+
+        findBoard.changeBoard(boardReq.getTitle(), boardReq.getContents());
+
+        return BoardRes.builder()
+                .boardId(id)
+                .title(findBoard.getTitle())
+                .contents(findBoard.getContents())
+                .writer(findBoard.getWriter())
+                .writeDate(findBoard.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .build();
+
     }
 }

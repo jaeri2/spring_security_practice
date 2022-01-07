@@ -37,4 +37,14 @@ public class BoardController {
 
         return ResponseEntity.ok(boardService.readBoards(id));
     }
+
+    // 글 수정
+    @PatchMapping("/boards/{id}")
+    public ResponseEntity<BoardRes> updateBoards(@PathVariable Long id, @RequestBody BoardReq boardReq) {
+        if(!boardService.existsById(id)){
+            throw new IllegalArgumentException("존재하지않는 게시글입니다.");
+        }
+
+        return ResponseEntity.ok(boardService.updateBoards(id, boardReq));
+    }
 }
