@@ -26,7 +26,6 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        log.info(">>> JwtFilter doFilter 호출");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(request); // header에서 jwt를 받아온다.
         String requestURI = request.getRequestURI();

@@ -63,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 회원가입과 로그인 외에는 모두 인증이 필요하다.
                 .authorizeRequests()
                 .antMatchers("/login/**", "/join/**").permitAll()
+                .antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
 
                 .and()

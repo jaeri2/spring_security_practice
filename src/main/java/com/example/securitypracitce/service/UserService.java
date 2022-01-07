@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -46,6 +48,16 @@ public class UserService {
         userRepository.save(newUser);
 
         return UserDto.from(newUser);
+    }
+
+    public List<UserDto> findAllMember() {
+        List<User> allUser = userRepository.findAll();
+        List<UserDto> result = new ArrayList<>();
+        for (User user : allUser) {
+            result.add(UserDto.from(user));
+        }
+
+        return result;
     }
 
 }

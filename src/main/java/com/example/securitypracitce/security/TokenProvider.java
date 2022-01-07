@@ -40,6 +40,7 @@ public class TokenProvider implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        log.info(">>> TokenProvider - afterPropertiesSet");
         // HMAC-SHA 알고리즘 + 문자열 secret key 또는, HMAC-SHA 알고리즘 + 인코딩된 byte array
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
