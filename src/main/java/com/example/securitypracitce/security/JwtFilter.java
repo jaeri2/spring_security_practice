@@ -26,17 +26,20 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        log.info(">>> doFilter 실행");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String jwt = resolveToken(request); // header에서 jwt를 받아온다.
         String requestURI = request.getRequestURI();
+        log.info(">>> doFilter jwt : " + jwt);
+        log.info(">>> doFilter requestURI : " + requestURI);
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             // token이 유효하다면 토큰으로부터 Autentication을 받아와 SecurityContext에 저장한다.
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("Security Context에 '{}' 인증정보를 저장했습니다. >>> uri : {}", authentication.getName(), requestURI);
+            log.info("Security Context에 '{}' 인증정보를 저장했습니다. >>> uri : {}", authentication.getName(), requestURI);
         } else {
-            log.debug("유효한 JWT 토큰이 없습니다. >>> uri : {}", requestURI);
+            log.info("유효한 JWT 토큰이 없습니다. >>> uri : {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

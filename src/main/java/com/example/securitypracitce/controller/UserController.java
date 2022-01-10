@@ -7,6 +7,7 @@ import com.example.securitypracitce.security.JwtFilter;
 import com.example.securitypracitce.security.TokenProvider;
 import com.example.securitypracitce.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,44 +17,47 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     // 1. 회원가입
-    @PostMapping("/join")
+    @PostMapping("/signup")
     public ResponseEntity<UserDto> signup(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.signup(userDto));
     }
 
     // 2. 로그인
-    @PostMapping("/login")
+    @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
+        log.info(">>> -------------- 로그인 ----------------");
         // UsernamePasswordAuthenticationToken -> Authentication 인터페이스의 구현체, 사용자에게 리턴되는 Jwt 토큰이 아니라 Spring이 인증로직에서 사용하는 토큰이다.
         // Authentication을 구현한 구현체만이 AuthenticationManager를 통한 인증과정을 수행할 수 있다.
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+        log.info(">>> authenticationToken.toString() : " + authenticationToken.toString());
 
         // 인증정보 생성 및 SecurityContext에 저장
         Authentication authentication =
                 authenticationManagerBuilder.getObject() // authenticationManagerBuilder.getObject() -> AuthenticationManager 리턴된다.
                 .authenticate(authenticationToken); // AuthenticationManager.authenticate ->
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info(">>> authentication : " + authentication.toString());
 
         // jwt token 생성
         String jwtToken = tokenProvider.createToken(authentication);
+        log.info(">>> jwtToken : " + jwtToken);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwtToken);

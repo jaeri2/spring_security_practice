@@ -21,12 +21,12 @@ public class BoardController {
     private final BoardService boardService;
 
     // 글 작성
-    @PostMapping("/boards")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<String> createBoards(@RequestBody BoardReq boardReq) {
-        boardService.createBoard(boardReq);
-        return ResponseEntity.ok("글 작성이 완료되었습니다.");
-    }
+//    @PostMapping("/boards")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+//    public ResponseEntity<String> createBoards(@RequestBody BoardReq boardReq) {
+//        boardService.createBoard(boardReq);
+//        return ResponseEntity.ok("글 작성이 완료되었습니다.");
+//    }
 
     // 글 조회
     @GetMapping("/boards/{id}")
@@ -47,4 +47,12 @@ public class BoardController {
 
         return ResponseEntity.ok(boardService.updateBoards(id, boardReq));
     }
+
+
+    @DeleteMapping("/boards/{id}")
+    public ResponseEntity<String> deleteBoards(@PathVariable Long id) {
+
+        return ResponseEntity.ok("글이 삭제되었습니다.");
+    }
+
 }

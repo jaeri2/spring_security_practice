@@ -49,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity
                 // token 방식을 사용하기 때문에, csrf를 diable 처리
                 .csrf().disable()
+                .cors()
+                .and()
 
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -62,8 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 회원가입과 로그인 외에는 모두 인증이 필요하다.
                 .authorizeRequests()
-                .antMatchers("/login/**", "/join/**").permitAll()
-                .antMatchers("/api/**").authenticated()
+                .antMatchers("/api/authenticate/**", "/api/signup/**").permitAll()
+                //.antMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
 
                 .and()

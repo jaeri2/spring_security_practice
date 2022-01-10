@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 9090
   servlet:
     context-path: /
     encoding:
@@ -21,6 +21,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  security:
+    cors:
+      allow-origins:
+        - http://localhost
 
 
 

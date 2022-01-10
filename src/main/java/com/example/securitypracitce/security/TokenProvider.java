@@ -88,6 +88,7 @@ public class TokenProvider implements InitializingBean {
     // 토큰의 유효성을 검증한다.
     public boolean validateToken(String token) {
         try {
+            log.info(">>> TokenProvider validateToken 실행 (try)");
             Jwts.parser().setSigningKey(key).parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {

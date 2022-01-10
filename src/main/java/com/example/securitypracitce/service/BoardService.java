@@ -6,6 +6,7 @@ import com.example.securitypracitce.domain.entity.Board;
 import com.example.securitypracitce.domain.entity.User;
 import com.example.securitypracitce.repository.BoardRepository;
 import com.example.securitypracitce.repository.UserRepository;
+import com.example.securitypracitce.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,18 +28,11 @@ public class BoardService {
         return boardRepository.existsById(id);
     }
 
-    public String findLoginUserEmail() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserDetails userDetails = (UserDetails) principal;
-        String email = userDetails.getUsername();
-
-        return email;
-    }
 
     // 글 작성
     public void createBoard(BoardReq boardReq) {
-        String email = findLoginUserEmail();
-        User findUser = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("등록되지 않은 사용자 정보입니다."));
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(() -> new IllegalArgumentException("Security Context에 인증 정보가 없습니다."));
+        User findUser = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("등록되지 않은 사용자 정보입니다."));
 
         Board newBoard = Board.builder()
                 .title(boardReq.getTitle())
@@ -68,8 +62,8 @@ public class BoardService {
     public BoardRes updateBoards(Long id, BoardReq boardReq) {
         Board findBoard = boardRepository.findById(id).get();
 
-        String email = findLoginUserEmail();
-        if (!findBoard.getUser().getEmail().equals(email)) {
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(() -> new IllegalArgumentException("Security Context에 인증 정보가 없습니다."));
+        if (!findBoard.getUser().getUsername().equals(username)) {
             throw new IllegalArgumentException("해당 글을 수정할 수 있는 권한이 없습니다.");
         }
 

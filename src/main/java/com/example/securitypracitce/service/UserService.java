@@ -23,7 +23,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserDto signup(UserDto userDto) {
-        if(userRepository.findOneWithAuthoritiesByEmail(userDto.getEmail()).orElse(null) != null){
+        if(userRepository.findOneWithAuthoritiesByUsername(userDto.getUsername()).orElse(null) != null){
             throw new DuplicateMemberException("이미 가입되어있는 유저입니다.");
         }
 
@@ -39,7 +39,7 @@ public class UserService {
 
 
         User newUser = User.builder()
-                .email(userDto.getEmail())
+                .username(userDto.getUsername())
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .nickname(userDto.getNickname())
                 .authorities(Collections.singleton(authority))
