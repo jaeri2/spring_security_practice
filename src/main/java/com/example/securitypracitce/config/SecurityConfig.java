@@ -63,10 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 // 회원가입과 로그인 외에는 모두 인증이 필요하다.
-                .authorizeRequests()
-                .antMatchers("/api/authenticate/**", "/api/signup/**").permitAll()
-                //.antMatchers("/api/**").authenticated()
-                .anyRequest().authenticated()
+                .authorizeRequests() // security 처리에 HttpServletRequest를 사용한다
+                .antMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
 
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));

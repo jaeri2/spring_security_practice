@@ -76,6 +76,27 @@ public class BoardService {
                 .writer(findBoard.getWriter())
                 .writeDate(findBoard.getUpdatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
+    }
+
+    // 글 삭제
+    @Transactional
+    public void deleteBoards(Long id) {
+        boolean isAdmin = SecurityUtil.hasAdminRole();
+        String username = SecurityUtil.getCurrentUsername().orElseThrow(() -> new IllegalArgumentException("Security Context에 인증 정보가 없습니다."));
+
+        log.info("-->> deleteBoard - isAdmin : " + isAdmin);
+        log.info("-->> deleteBoard - username : " + username);
+
+        Board findBoard = boardRepository.findById(id).get();
+
+        if (!isAdmin && !findBoard.getUser().getUsername().equals(username)) {
+            log.info("-->> deleteBoard 권한없음 실행불가");
+            throw new IllegalArgumentException("해당 글을 삭제할 수 있는 권한이 없습니다.");
+        }
+
+        boardRepository.deleteById(id);
 
     }
+
+
 }

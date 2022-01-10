@@ -21,12 +21,12 @@ public class BoardController {
     private final BoardService boardService;
 
     // 글 작성
-//    @PostMapping("/boards")
+    @PostMapping("/boards")
 //    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-//    public ResponseEntity<String> createBoards(@RequestBody BoardReq boardReq) {
-//        boardService.createBoard(boardReq);
-//        return ResponseEntity.ok("글 작성이 완료되었습니다.");
-//    }
+    public ResponseEntity<String> createBoards(@RequestBody BoardReq boardReq) {
+        boardService.createBoard(boardReq);
+        return ResponseEntity.ok("글 작성이 완료되었습니다.");
+    }
 
     // 글 조회
     @GetMapping("/boards/{id}")
@@ -51,7 +51,10 @@ public class BoardController {
 
     @DeleteMapping("/boards/{id}")
     public ResponseEntity<String> deleteBoards(@PathVariable Long id) {
-
+        if(!boardService.existsById(id)){
+            throw new IllegalArgumentException("존재하지않는 게시글입니다.");
+        }
+        boardService.deleteBoards(id);
         return ResponseEntity.ok("글이 삭제되었습니다.");
     }
 
