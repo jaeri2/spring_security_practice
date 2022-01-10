@@ -6,6 +6,10 @@ import com.example.securitypracitce.domain.dto.UserDto;
 import com.example.securitypracitce.security.JwtFilter;
 import com.example.securitypracitce.security.TokenProvider;
 import com.example.securitypracitce.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+@Api(tags = {"사용자"})
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +38,10 @@ public class UserController {
 
     // 1. 회원가입
     @PostMapping("/signup")
+    @ApiOperation(value = "회원가입 API", notes = "사용자 정보를 저장합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userDto", value = "사용자 dto", required = true, dataType = "UserDto")
+    })
     public ResponseEntity<UserDto> signup(@RequestBody UserDto userDto) {
         return ResponseEntity.ok(userService.signup(userDto));
     }
