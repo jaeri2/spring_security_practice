@@ -47,6 +47,10 @@ public class UserController {
     }
 
     // 2. 로그인
+    @ApiOperation(value = "로그인 API", notes = "사용자 정보로 로그인합니다.")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "loginDto", value = "로그인 dto(아이디, 비밀번호)", required = true, dataType = "LoginDto")
+    })
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> login(@RequestBody LoginDto loginDto) {
         log.info(">>> -------------- 로그인 ----------------");
@@ -76,6 +80,7 @@ public class UserController {
     // 3. 회원조회(only ADMIN)
     @GetMapping("/api/members")
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @ApiOperation(value = "사용자 조회 API", notes = "전체 사용자의 정보를 조회합니다. ONLY ADMIN")
     public ResponseEntity<List<UserDto>> findAllMember() {
         return ResponseEntity.ok(userService.findAllMember());
     }

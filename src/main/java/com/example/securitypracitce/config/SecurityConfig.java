@@ -41,6 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/favicon.ico");
+
+        // swagger 관련
+        web.ignoring().antMatchers("/swagger/**", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v2/api-docs");
     }
 
     @Override
@@ -71,4 +74,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(new JwtSecurityConfig(tokenProvider));
 
     }
+
+
 }
