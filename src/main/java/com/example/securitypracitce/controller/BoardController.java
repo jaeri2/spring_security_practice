@@ -40,7 +40,7 @@ public class BoardController {
     @GetMapping("/boards/{id}")
     @ApiOperation(value = "게시글 조회 API", notes = "게시글을 조회합니다.")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "게시글 id", required = true)
+            @ApiImplicitParam(name = "id", value = "게시글 id", example = "1", required = true)
     })
     public ResponseEntity<BoardRes> readBoards(@PathVariable Long id) {
         if(!boardService.existsById(id)){
@@ -54,7 +54,7 @@ public class BoardController {
     @PatchMapping("/boards/{id}")
     @ApiOperation(value = "게시글 수정 API", notes = "게시글을 수정합니다.(본인이 작성한 게시글만 가능)")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "게시글 id", required = true),
+            @ApiImplicitParam(name = "id", value = "게시글 id", example = "1", required = true),
             @ApiImplicitParam(name = "boardReq", value = "boardReq dto", required = true, dataType = "BoardReq")
     })
     public ResponseEntity<BoardRes> updateBoards(@PathVariable Long id, @RequestBody BoardReq boardReq) {
@@ -69,7 +69,7 @@ public class BoardController {
     @DeleteMapping("/boards/{id}")
     @ApiOperation(value = "게시글 삭제 API", notes = "게시글을 삭제합니다.(본인이 작성한 게시글 or ADMIN)")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "id", value = "게시글 id", required = true)
+            @ApiImplicitParam(name = "id", value = "게시글 id", example = "1", required = true)
     })
     public ResponseEntity<String> deleteBoards(@PathVariable Long id) {
         if(!boardService.existsById(id)){
